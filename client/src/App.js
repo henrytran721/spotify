@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Spotify from './views/Spotify';
 import TopTracks from './views/TopTracks';
+import SpotifyPlayer from './views/SpotifyPlayer';
 import {
   BrowserRouter as Router,
   Switch,
