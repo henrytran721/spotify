@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import ColorThief from "colorthief";
+import SpotifyPlayer from 'react-spotify-web-playback';
 
 // functional component takes top tracks and maps through array to display on client side
 function Tracks(props) {
-    const { topTracks, active, handleNext, handlePrev } = props;
+    const { topTracks, active, handleNext, handlePrev, token } = props;
     var result = [];
+    console.log(topTracks[active])
     return (
         <div className='track'>
             <div className='trackName'>
@@ -32,6 +34,21 @@ function Tracks(props) {
                     /></a>
                     <button onClick={handleNext}>Next</button>
                     </div>
+                    {topTracks[active] !== undefined ? 
+                    <div className='spotifyPlayer'>
+                    <SpotifyPlayer 
+                    token={token}
+                    uris={topTracks[active].uri}
+                    styles={{
+                        bgColor: '#333',
+                        color: '#fff',
+                        loaderColor: '#fff',
+                        sliderColor: '#1cb954',
+                        savedColor: '#fff',
+                        trackArtistColor: '#ccc',
+                        trackNameColor: '#fff',
+                    }}
+                    /></div> : ''}
                 </div>: ''
                 }
             </div>
@@ -59,7 +76,8 @@ export default class TopTracks extends Component {
         const access_token = queryString.get('access_token');
         this.setState({access_token});
 
-        fetch('https://api.spotify.com/v1/me/top/tracks?limit=10', {
+        // fetch top tracks 
+        fetch('https://api.spotify.com/v1/me/top/tracks?limit=20', {
                 headers: {
                     'Authorization': 'Bearer ' + access_token,
                     "Accept": "application/json"
@@ -72,10 +90,20 @@ export default class TopTracks extends Component {
                 })
             })
             .catch((e) => {console.error(e)})
+            
+        fetch('https://api.spotify.com/v1/me/', {
+            headers: {
+                'Authorization': 'Bearer ' + access_token,
+                "Accept": "application/json"
+            }
+        })
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+
     }
 
     handleNext = () => {
-        if(this.state.active < 9) {
+        if(this.state.active < 19) {
             this.setState({
                 active: this.state.active + 1
             })
@@ -103,6 +131,7 @@ export default class TopTracks extends Component {
                     imgRef={this.imgRef}
                     handleNext={this.handleNext}
                     handlePrev={this.handlePrev}
+                    token={this.state.access_token}
                 />
             </div>
         )

@@ -23,13 +23,15 @@ export default class Spotify extends Component {
             loggedin: false,
             user: {},
             userid: '',
-            access_token: ''
+            access_token: '',
+            refresh_token: ''
         }
     }
 
     componentDidMount() {
         axios.post('/')
             .then((res) => {
+                // set state to redirect on initial login 
                 this.setState({url: res.data.redirect})
         })
         
@@ -51,6 +53,7 @@ export default class Spotify extends Component {
 
     render() {
         const { loggedin, access_token } = this.state;
+        console.log(this.state.user)
         return(
             <div>
                 <div className='spotifyContainer'>

@@ -5,9 +5,13 @@ let request = require('request')
 const redirect_uri = 'http://localhost:8080/callback/';
 
 router.post('/', (req, res, next) => {
-    var scopes = 'user-read-private user-read-email user-library-read user-top-read';
+    var scopes = 'user-read-private user-read-email user-library-read user-top-read user-modify-playback-state user-read-currently-playing user-read-playback-state streaming';
     let url = 'https://accounts.spotify.com/authorize' + '?response_type=code' + '&client_id=' + process.env.CLIENT_ID + (scopes ? '&scope=' + encodeURIComponent(scopes) : '') + '&redirect_uri=' + encodeURIComponent(redirect_uri);
-    res.send({redirect: url})
+    if(global.data) {
+      res.send({redirect: url, refresh_token: global.data.refresh_token});
+    } else {
+      res.send({redirect: url})
+    }
 })
 
 router.post('/me', (req, res, next) => {
@@ -32,10 +36,19 @@ router.get('/callback', function(req, res) {
     }
     request.post(authOptions, function(error, response, body) {
       var access_token = body.access_token
+      // var currTime = new Date();
+      // var time = body.expires_in;
+      // var expired = currTime.getTime() + time;
+      // if(currTime > expired) {
+
+      // }
+      global.data = body;
+      console.log(data);
       let uri = process.env.FRONTEND_URI || 'http://localhost:3000'
       res.redirect(uri + '?access_token=' + access_token);
     })
   })
-  
+
+  router.get
 
 module.exports = router;
