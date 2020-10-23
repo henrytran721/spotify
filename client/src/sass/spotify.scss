@@ -11,6 +11,7 @@ $roboto: 'Roboto Condensed', sans-serif;
     width: 100%;
     height: 100vh;
     background: $black;
+    overflow-x: hidden;
 }
 
 .menuBtnContainer {
@@ -51,7 +52,7 @@ $roboto: 'Roboto Condensed', sans-serif;
 .trackContainer {
     height: 100vh;
     overflow-y: hidden;
-    transition: background-color 1500ms linear;
+
     h2 {
         margin: 0;
         padding: 2% 0;
@@ -63,16 +64,12 @@ $roboto: 'Roboto Condensed', sans-serif;
             img {
                 box-shadow: 
                 5px 5px rgba(0, 0, 0, 0.4),
-                -5px -5px rgba(0, 0, 0, 0.4),
                 10px 10px rgba(0, 0, 0, 0.3),
-                -10px -10px rgba(0, 0, 0, 0.3),
                 15px 15px rgba(0, 0, 0, 0.2),
-                -15px -15px rgba(0, 0, 0, 0.2),
                 20px 20px rgba(0, 0, 0, 0.1),
-                -20px -20px rgba(0, 0, 0, 0.1),
-                25px 25px rgba(0, 0, 0, 0.05),
-                -25px -25px rgba(0, 0, 0, 0.05);
+                25px 25px rgba(0, 0, 0, 0.05);
                 transition: transform 1s;
+                margin-left: 4%;
             }
 
             .moveY {
@@ -97,6 +94,71 @@ $roboto: 'Roboto Condensed', sans-serif;
                 font-family: $roboto;
                 font-size: 1.5em;
             }
+        }
+    }
+}
+
+// nav btns
+.navBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+polygon {
+    fill: #FFF;
+    transition: all .2s ease-out;
+      
+    &.arrow-middle {
+        opacity: 0.75;
+      }
+  
+      &.arrow-top {
+        opacity: 0.5
+      }
+       
+  }
+
+#more-arrows-right {
+    transform: rotate(-90deg);
+    width: 80px;
+
+    &:hover {
+        polygon {
+            fill: #fff;
+            transition: all 500ms ease-out;
+
+            &.arrow-bottom {
+                transform: translateY(-18px);
+              }
+        
+              &.arrow-top {
+                transform: translateY(18px);
+              }
+        }
+    }
+}
+
+#more-arrows-left {
+    transform: rotate(90deg);
+    width: 80px;
+
+    &:hover {
+        polygon {
+            fill: #fff;
+            transition: all 500ms ease-out;
+
+            &.arrow-bottom {
+                transform: translateY(-18px);
+              }
+        
+              &.arrow-top {
+                transform: translateY(18px);
+              }
         }
     }
 }
