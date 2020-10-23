@@ -1,12 +1,42 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import ColorThief from "colorthief";
 import SpotifyPlayer from 'react-spotify-web-playback';
 
 // functional component takes top tracks and maps through array to display on client side
 function Tracks(props) {
-    const { topTracks, active, handleNext, handlePrev, token } = props;
+    const { topTracks, token, color } = props;
     var result = [];
-    console.log(topTracks[active])
+    
+    // use react hook to create an active state variable
+    // passing in a function sets the state only once and doesn't run every time the function is rendered
+    const [active, setActive] = useState(() => {return 0});
+
+    // function to drecrement our active state
+    // passes in updated value to update active state
+    function decrementActive() {
+        setActive(prevActive => prevActive - 1);
+    }
+
+    // function to increment our state
+    function incrementActive() {
+        var img = document.querySelector('.imgMove');
+        img.classList.add('moveY');
+
+        setTimeout(function() {
+            if(active < 19) {
+                setActive(prevActive => prevActive + 1);
+            } else {
+                setActive(0);
+            }
+            img.classList.remove('moveY')
+        }, 500)
+    }
+
+    // 
+    useEffect(() => {
+        console.log(active);
+    }, [active])
+    
     return (
         <div className='track'>
             <div className='trackName'>
@@ -17,8 +47,8 @@ function Tracks(props) {
                     <a href={topTracks[active].external_urls.spotify} target='_blank'><p>{topTracks[active].artists[0].name} - {topTracks[active].name}</p></a>
                     </div>
                     <div className='navAndImage'>
-                    {active > 0 ? <button onClick={handlePrev}>Prev</button> : <span></span>}
-                    <a href={topTracks[active].external_urls.spotify} target='_blank'><img 
+                    {active > 0 ? <button onClick={decrementActive}>Prev</button> : <span></span>}
+                    <a href={topTracks[active].external_urls.spotify} target='_blank'><img class='imgMove'
                         crossOrigin={"anonymous"}
                         ref={props.imgRef}
                         src={topTracks[active].album.images[0].url} 
@@ -28,11 +58,13 @@ function Tracks(props) {
                             const img = props.imgRef.current;
                             result = colorThief.getPalette(img, 10);
                             var color = result[0];
+                            var colortwo =  result[1];
                             var trackContainer = document.querySelector('.trackContainer');
+                            var albumArt = document.querySelector('.imgMove');
                             trackContainer.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
                           }}
                     /></a>
-                    <button onClick={handleNext}>Next</button>
+                    <button onClick={incrementActive}>Next</button>
                     </div>
                     {topTracks[active] !== undefined ? 
                     <div className='spotifyPlayer'>
@@ -40,15 +72,16 @@ function Tracks(props) {
                     token={token}
                     uris={topTracks[active].uri}
                     styles={{
-                        bgColor: '#333',
+                        bgColor: '#000',
                         color: '#fff',
                         loaderColor: '#fff',
-                        sliderColor: '#1cb954',
+                        sliderColor: '#fff',
                         savedColor: '#fff',
                         trackArtistColor: '#ccc',
                         trackNameColor: '#fff',
                     }}
-                    /></div> : ''}
+                    />
+                    </div> : ''}
                 </div>: ''
                 }
             </div>
@@ -86,51 +119,30 @@ export default class TopTracks extends Component {
             .then((res) => res.json())
             .then((data) => {
                 this.setState({
-                    topTracks: data.items
+                    topTracks: data.items,
+                    color: []
                 })
             })
             .catch((e) => {console.error(e)})
             
-        fetch('https://api.spotify.com/v1/me/', {
-            headers: {
-                'Authorization': 'Bearer ' + access_token,
-                "Accept": "application/json"
-            }
-        })
-        .then((res) => res.json())
-        .then((data) => console.log(data))
+        // fetch('https://api.spotify.com/v1/me/', {
+        //     headers: {
+        //         'Authorization': 'Bearer ' + access_token,
+        //         "Accept": "application/json"
+        //     }
+        // })
+        // .then((res) => res.json())
+        // .then((data) => console.log(data))
 
-    }
-
-    handleNext = () => {
-        if(this.state.active < 19) {
-            this.setState({
-                active: this.state.active + 1
-            })
-        } else {
-            this.setState({
-                active: 0
-            })
-        }
-    }
-
-    handlePrev = () => {
-        this.setState({
-            active: this.state.active - 1
-        })
     }
 
     render() {
-        console.log(this.state.active);
         return(
             <div className='trackContainer'>
                 <h2 style={{color: 'white'}}>Your Top Tracks</h2>
                 <Tracks 
                     topTracks={this.state.topTracks}
-                    active={this.state.active}
                     imgRef={this.imgRef}
-                    handleNext={this.handleNext}
-                    handlePrev={this.handlePrev}
                     token={this.state.access_token}
                 />
             </div>

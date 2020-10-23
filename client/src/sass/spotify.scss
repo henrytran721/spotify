@@ -50,6 +50,8 @@ $roboto: 'Roboto Condensed', sans-serif;
 
 .trackContainer {
     height: 100vh;
+    overflow-y: hidden;
+    transition: background-color 1500ms linear;
     h2 {
         margin: 0;
         padding: 2% 0;
@@ -59,7 +61,22 @@ $roboto: 'Roboto Condensed', sans-serif;
     .track {
         .trackName {
             img {
-                box-shadow: 10px 5px 10px rgba(0,0,0,0.15);
+                box-shadow: 
+                5px 5px rgba(0, 0, 0, 0.4),
+                -5px -5px rgba(0, 0, 0, 0.4),
+                10px 10px rgba(0, 0, 0, 0.3),
+                -10px -10px rgba(0, 0, 0, 0.3),
+                15px 15px rgba(0, 0, 0, 0.2),
+                -15px -15px rgba(0, 0, 0, 0.2),
+                20px 20px rgba(0, 0, 0, 0.1),
+                -20px -20px rgba(0, 0, 0, 0.1),
+                25px 25px rgba(0, 0, 0, 0.05),
+                -25px -25px rgba(0, 0, 0, 0.05);
+                transition: transform 1s;
+            }
+
+            .moveY {
+                transform: scale(0.6) translateY(165%);
             }
         }
 
@@ -96,5 +113,11 @@ $roboto: 'Roboto Condensed', sans-serif;
 // spotify player
 
 .spotifyPlayer {
-    padding: 1.5% 0 0 0;
+    padding: 1.7% 0 0 0;
+    z-index: 10000;
+}
+
+._PlayerRSWP {
+    position: relative;
+    z-index: 10;
 }
