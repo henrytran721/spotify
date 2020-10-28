@@ -20,6 +20,7 @@ function Tracks(props) {
     // function to increment our state
     function incrementActive() {
         var img = document.querySelector('.imgMove');
+
         img.classList.add('moveY');
 
         setTimeout(function() {
@@ -47,12 +48,22 @@ function Tracks(props) {
                     <a href={topTracks[active].external_urls.spotify} target='_blank'><p>{topTracks[active].artists[0].name} - {topTracks[active].name}</p></a>
                     </div>
                     <div className='navAndImage'>
-                    {active > 0 ? <button onClick={decrementActive}>Prev</button> : <span></span>}
+                    {/** Previous Btn */}
+                    {active > 0 ? 
+                    <button className='navBtn' onClick={decrementActive}>
+                        <svg id="more-arrows-left">
+                            <polygon class="arrow-top" points="37.6,27.9 1.8,1.3 3.3,0 37.6,25.3 71.9,0 73.7,1.3 "/>
+                            <polygon class="arrow-middle" points="37.6,45.8 0.8,18.7 4.4,16.4 37.6,41.2 71.2,16.4 74.5,18.7 "/>
+                            <polygon class="arrow-bottom" points="37.6,64 0,36.1 5.1,32.8 37.6,56.8 70.4,32.8 75.5,36.1 "/>
+                        </svg>
+                    </button> 
+                    : <span></span>}
                     <a href={topTracks[active].external_urls.spotify} target='_blank'><img class='imgMove'
                         crossOrigin={"anonymous"}
                         ref={props.imgRef}
                         src={topTracks[active].album.images[0].url} 
                         alt='album'
+                        // Change background after every iteration with Color Thief
                         onLoad={() => {
                             const colorThief = new ColorThief();
                             const img = props.imgRef.current;
@@ -60,11 +71,20 @@ function Tracks(props) {
                             var color = result[0];
                             var colortwo =  result[1];
                             var trackContainer = document.querySelector('.trackContainer');
-                            var albumArt = document.querySelector('.imgMove');
                             trackContainer.style.background = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                            if(active > 0) {
+                                trackContainer.style.transition = 'background-color 1500ms linear';
+                            }
                           }}
                     /></a>
-                    <button onClick={incrementActive}>Next</button>
+                    {/** Next Btn */}
+                    <button className='navBtn' onClick={incrementActive}>
+                        <svg id="more-arrows-right">
+                            <polygon class="arrow-top" points="37.6,27.9 1.8,1.3 3.3,0 37.6,25.3 71.9,0 73.7,1.3 "/>
+                            <polygon class="arrow-middle" points="37.6,45.8 0.8,18.7 4.4,16.4 37.6,41.2 71.2,16.4 74.5,18.7 "/>
+                            <polygon class="arrow-bottom" points="37.6,64 0,36.1 5.1,32.8 37.6,56.8 70.4,32.8 75.5,36.1 "/>
+                        </svg>
+                    </button>
                     </div>
                     {topTracks[active] !== undefined ? 
                     <div className='spotifyPlayer'>
@@ -110,7 +130,7 @@ export default class TopTracks extends Component {
         this.setState({access_token});
 
         // fetch top tracks 
-        fetch('https://api.spotify.com/v1/me/top/tracks?limit=20', {
+        fetch('https://api.spotify.com/v1/me/top/tracks?limit=30', {
                 headers: {
                     'Authorization': 'Bearer ' + access_token,
                     "Accept": "application/json"
